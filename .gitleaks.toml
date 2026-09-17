@@ -1,0 +1,17 @@
+title = "UGETMORE secret detection"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "literal-service-credential"
+description = "Hardcoded service password, API key or client secret"
+regex = '''(?i)(?:password|api[_-]?key|client[_-]?secret)\s*[:=]\s*["']([^"'\s]{8,})["']'''
+secretGroup = 1
+
+[[rules.allowlists]]
+description = "Reset-flow step enum; not a service credential"
+condition = "AND"
+paths = ['''^components/auth/ResetPassword\.tsx$''']
+regexTarget = "match"
+regexes = ['''^PASSWORD = 'password'$''']
