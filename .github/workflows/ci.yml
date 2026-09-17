@@ -164,7 +164,9 @@ jobs:
             if (findings.some(f => f.severity !== 'LOW')) core.setFailed('Material findings require correction and re-review. No automatic risk acceptance.');
 
   gate:
-    name: CI Gate
+    # Only PR/merge-queue runs may emit the required context. A green branch push
+    # without AI review must never satisfy the pull-request merge requirement.
+    name: ${{ (github.event_name == 'pull_request' || github.event_name == 'merge_group') && 'CI Gate' || 'Branch validation' }}
     if: always()
     needs: [validate, dependencies, secrets, review]
     runs-on: ubuntu-latest

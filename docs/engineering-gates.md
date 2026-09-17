@@ -10,7 +10,7 @@ Separate jobs audit dependencies at high/critical severity and scan secrets with
 
 On PRs, independent contextual review uses GitHub Models `openai/gpt-4.1` through the ephemeral `GITHUB_TOKEN` with `models: read`. No separate paid API key is configured. The owner must ensure Models is enabled with adequate quota; this setup does not purchase quota or enable billing. The job reads the base policy/state and changed text via GitHub's API, executes no PR code, records findings in the Actions summary and fails on material findings or incomplete review. Lockfile contents and binary assets are excluded from model review; scanners and human review still apply. Large/missing textual diffs fail rather than silently approving partial review; split oversized PRs.
 
-The final **CI Gate** job requires every deterministic job to succeed and, on PRs, the AI review to succeed. Failed, cancelled or unexpectedly skipped prerequisites cannot yield a green gate. Push/merge-group checks run deterministic validation; the pull-request review requirement remains separately enforced by the main ruleset.
+The final **CI Gate** job requires every deterministic job to succeed and, on PRs, the AI review to succeed. Failed, cancelled or unexpectedly skipped prerequisites cannot yield a green gate. Push/manual runs use the different name **Branch validation**, so a successful push without AI review cannot satisfy the required PR context. Merge-group checks revalidate deterministic behavior after queue integration; the pull-request review requirement remains separately enforced by the main ruleset.
 
 ## Test coverage and current red baseline
 
