@@ -1,15 +1,15 @@
 ---
 project: UGETMORE e-commerce platform
-state_version: 1
-last_updated: "2026-09-17T11:17:21+02:00"
+state_version: 2
+last_updated: "2026-09-17T11:47:16+02:00"
 updated_by: Codex, at repository owner's request
-current_phase: Assessment complete; security and commerce stabilization planned
+current_phase: Automated engineering gates implementation and validation
 system_maturity: mvp
 target_maturity: production
-active_work_unit: null
-repository_branch: main
-repository_revision: d91c2b58f2634e7caf88e5060684fd4c9c692c68
-revision_scope: Assessed application baseline; this documentation commit is recorded by Git
+active_work_unit: CI-001
+repository_branch: codex/github-actions-gates
+repository_revision: ccbaa9e04755638e3acc7136eb6fb5d7faa3bb77
+revision_scope: CI branch base; Git records the implementation commits
 overall_status: IN_PROGRESS
 production_readiness: BLOCKING
 ---
@@ -40,7 +40,7 @@ Delivery objective: stabilize the existing application and demonstrate secure, r
 | Infrastructure | Local production build previously passed. Five Next.js API route files implement supplier proxies and Amrod cache/status operations. Live infrastructure unverified. |
 | Integrations | Amrod, Parrot, Tarsus and backend-mediated PayFast payment generation. Live permissions, callbacks and reconciliation unverified. |
 
-No remediation from the assessment has been validated. Local dependency edits were observed during state preparation; see sections 09 and 15.
+No application remediation from the assessment has been validated. CI work uses an isolated worktree based on committed main; the original worktree's package edits are preserved. See sections 09 and 15.
 
 ## 04. Architecture snapshot
 
@@ -52,13 +52,15 @@ No remediation from the assessment has been validated. Local dependency edits we
 
 ## 05. Current phase
 
-**Phase:** security and commerce stabilization planning. **Status:** PLANNED.
+**Phase:** automated engineering gates. **Status:** IN_PROGRESS. The owner requested GitHub Actions and mandatory pre-merge evidence under AI-SWE-006.
 
 The repository assessment is complete. Phase exit requires validated supplier access controls and session verification; safe HTML handling; recoverable checkout; authoritative price/stock/payment contracts; dependency validation; and regression evidence for critical failure paths. Operational release requirements remain additional gates.
 
 ## 06. Active work unit
 
-**Primary active unit:** none after this documentation handoff. Remediation owners are unassigned; no remediation is claimed as in progress by this file.
+**Primary active unit: CI-001 — Automated engineering gates. Owner: Codex. Status: IN_PROGRESS.** Local workflow validation complete; GitHub execution and owner activation remain outstanding.
+
+Scope: workflow, starter commerce/security tests, review policy, PR template, CODEOWNERS, owner-installable main ruleset, dependency update configuration and operating documentation. No application fixes or automatic merge/deploy. Acceptance: workflow syntax valid; clean-install checks executed; negative security tests expose known defects; aggregate gate fails on failing prerequisites; PR run observed; owner enables rules before technical merge enforcement is claimed. GitHub reports current account has write but not admin access, so ruleset activation is blocked externally.
 
 **STATE-001 — Establish collaborator state:** documentation scope is `PROJECT_STATE.md` and the linked assessment. Acceptance: all 19 state sections present, findings accurately qualified, no secrets/customer records included, links resolve, and only intended documentation is committed. Publication is verified through Git remote history; this snapshot does not claim an application deployment.
 
@@ -85,6 +87,7 @@ No payment, database isolation, deployment, restoration or production workflow i
 | DEP-001 | READY | Identify owner/intent of local package changes; review compatibility and reconcile lockfile before clean-install, build, lint, typecheck and audit. |
 | API-001 | BLOCKED | Inspect backend identity, ownership, stock/pricing, order transactions and payment notification/idempotency controls. Needs backend source/specification and safe test environment. |
 | QA-001 | PLANNED | Add regression tests and CI for security, commerce and integration failure paths; validate mobile and accessibility flows. |
+| CI-001 | IN_PROGRESS | Local workflow checks validated; GitHub execution and owner branch-rule activation tracked below. |
 | OPS-001 | BLOCKED | Verify staging/production, monitoring, backups, restore and rollback. Needs runtime access, owners and operational evidence. |
 
 Infrastructure expansion and broad refactoring are DEFERRED until requirements or measured bottlenecks justify them. READY means actionable scope, not that an owner has started it or that provider/account changes have been approved.
@@ -104,6 +107,7 @@ Infrastructure expansion and broad refactoring are DEFERRED until requirements o
 | DEC-002 | ACTIVE | Publish this documentation independently of unrelated package edits, preserving their ownership and validation boundary. |
 | DEC-003 | PROPOSED | Stabilize the existing Next.js/external-API architecture before broad redesign. Current evidence does not justify distributed infrastructure expansion. |
 | DEC-004 | PROPOSED | Make the backend authoritative for identity, resource ownership, prices, stock, coupons and paid orders. Validate against actual backend implementation before choosing integration changes. |
+| DEC-005 | ACTIVE | User requested AI-SWE-006 merge controls. Fail closed on required test/security/review failures; no automatic merge/deployment and no baseline suppression to obtain green CI. Owner activation of branch rules remains required. |
 
 Record superseding decisions explicitly; do not overwrite prior architectural decisions silently.
 
@@ -145,10 +149,10 @@ All findings below remain **OPEN** unless a later state version records fix evid
 
 | Area | Evidence / current limit |
 | --- | --- |
-| Build, lint, TypeScript | Historical PASS for assessed working tree; current dependency edits NOT RUN. Commands in section 07 and assessment. |
-| Unit/integration/E2E | No tracked automated functional suite found during assessment; live workflows NOT RUN. |
+| Build, lint, TypeScript | CI branch clean `npm ci --ignore-scripts` PASS, lint/typecheck/build PASS on committed dependency baseline. Original worktree dependency edits remain NOT RUN. Actionlint and embedded review JavaScript parse PASS. |
+| Unit/integration/E2E | CI-001 adds four commerce tests (local PASS) and three security tests (one PASS, F03/F04 FAIL as expected for current defects). Live E2E workflows NOT RUN. |
 | Security | FAIL at assessed baseline: isolated probes allowed a fabricated admin cookie and preserved an HTML event handler. These probes used local source/mocks, not live exploitation. No corrective evidence yet. |
-| Dependencies | Historical audit described in section 09. New package state UNVERIFIED. |
+| Dependencies | CI branch fresh audit: 39 package findings (2 critical, 26 high, 9 moderate, 2 low). High/critical gate FAIL. Original worktree package edits remain UNVERIFIED. |
 | Database/payment | NOT VERIFIED: permissions, transactions, webhook validation, idempotency and reconciliation require backend review. |
 | Performance | Bundle metrics only; product detail first-load JS ~280 kB. Browser/load capacity NOT TESTED. |
 | Recovery/deployment | NOT VERIFIED. No restore, rollback or deployment acceptance performed. |
@@ -160,7 +164,7 @@ Historical checks used an already modified lockfile/installed dependencies. Buil
 
 - **Development:** local build previously completed; current dependency state needs revalidation.
 - **Test/staging/production:** availability, access and configuration UNKNOWN; do not label absent or healthy without inspection.
-- **CI/CD:** no tracked workflow found at assessment baseline; external automation/repository settings not inspected.
+- **CI/CD:** `Engineering checks` implemented on CI branch; activation and latest run evidence pending. Ruleset creation attempted and denied (HTTP 404); account permissions explicitly show admin=false. No active rulesets returned. Direct pushes/merges are not yet technically gated. See [owner setup](docs/engineering-gates.md).
 - **Latest application deployment:** UNKNOWN. Pushing these documents is not an application deployment or proof that external auto-deployment succeeded.
 - **Database, HTTPS, secrets, backups, restoration and rollback:** operational evidence outstanding.
 
@@ -176,11 +180,11 @@ Historical checks used an already modified lockfile/installed dependencies. Buil
 | BLOCK-002 | API-001; integrated auth/payment approval | Provide backend repository/specification and staging test setup; demonstrate ownership, price/stock enforcement and payment notification/idempotency behavior. |
 | BLOCK-003 | OPS-001; production approval | Identify infrastructure owner and produce hosting, HTTPS, monitoring, backup/restore and rollback evidence. |
 | BLOCK-004 | Reusing historical validation for package edits | Establish package-change ownership, reconcile intended versions and run clean validation. This does not prevent independent documentation or isolated source fixes. |
+| BLOCK-005 | CI-001 mandatory merge enforcement | Repository admin must activate `.github/main-ruleset.json`, require CI Gate and independent owner approval, and verify blocked merge on a failing disposable PR. Current identity has write access only. |
+| BLOCK-006 | AI review/runtime review completion | GitHub Models access/quota and complete diff required. Secret scan must pass before source reaches model review; no skipped/unavailable review is treated as approval. |
 
 ## 19. Next action
 
-**Recommended next work unit: SEC-001. Owner: unassigned.** Claim the unit, inspect supplier call sites, enumerate only the routes/methods actually needed, and replace unrestricted proxy forwarding with explicit permitted operations and verified access for privileged actions. Externalize credentials and coordinate rotation with the supplier account owner without copying values into documentation.
+**Current next action: CI-001 — observe the PR checks and have the repository admin activate the prepared main ruleset.** Verify CI Gate reports failure on the known negative tests/security findings and that main cannot be merged without checks and independent approval. Workflow publication alone is not enforcement.
 
-**Validation:** offline tests reject anonymous privileged operations, unknown paths/methods and invalid input without contacting suppliers; permitted catalog requests still map correctly. Run build/typecheck against an agreed dependency baseline.
-
-**Transition condition:** mark code containment VALIDATED only after checks pass; keep credential rotation and release approval blocked until their separate evidence is recorded. Update this file with owner, files, results and the next bounded action.
+**Transition condition:** only mark merge control VALIDATED after server-side rule activation and evidence of a blocked failing PR. Then claim SEC-001 to remediate supplier credential/proxy exposure and SEC-002 for the failing auth/HTML expectations; keep all related blockers visible. Application and production approval remain blocked.

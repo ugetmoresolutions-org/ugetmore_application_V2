@@ -1,5 +1,7 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+Before contributing, read [PROJECT_STATE.md](PROJECT_STATE.md) and the [engineering gates guide](docs/engineering-gates.md). Changes should enter main through reviewed pull requests. The guide distinguishes installed workflows from owner-activated branch protection and records the known failing security baseline.
+
 ## Getting Started
 
 First, run the development server:
