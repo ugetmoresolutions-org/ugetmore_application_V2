@@ -50,6 +50,8 @@ After workflows reach main, CODEOWNERS and Dependabot operate from the default b
 
 ## Finding and release policy
 
+Hosted validation on 17 September 2026: [PR run 35207328768](https://github.com/ugetmoresolutions/ugetmore_application_V2/actions/runs/35207328768) at `50362b6` passed lint, typecheck and build. Tests reported five passing and two failing security expectations; dependency and secret scans failed; AI review was skipped after secret-scan failure; CI Gate failed. This demonstrates that known failures propagate, not that GitHub branch protection is active. Real Models inference is still unverified; mocked control-flow checks covered clean findings, material findings, malformed output and service denial.
+
 See [the project review policy](../.github/ENGINEERING_REVIEW.md). Critical/high/medium findings block; low findings are advisory. No label-based exception bypass exists. Record disputed findings and evidence; independent review must establish a false positive before changing the gate or affected code. Existing secrets in history require rotation and a separately reviewed historical-remediation decision, not an unchecked scanner allowlist.
 
 There is no production deployment workflow yet. Runtime monitoring, staged rollout, rollback and backend/payment verification remain prerequisites for release. Review Actions logs/summaries for the exact head SHA and keep PROJECT_STATE.md current after meaningful validation.

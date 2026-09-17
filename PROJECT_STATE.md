@@ -1,15 +1,15 @@
 ---
 project: UGETMORE e-commerce platform
-state_version: 2
-last_updated: "2026-09-17T11:47:16+02:00"
+state_version: 3
+last_updated: "2026-09-17T11:53:51+02:00"
 updated_by: Codex, at repository owner's request
-current_phase: Automated engineering gates implementation and validation
+current_phase: Automated engineering gates exercised; owner enforcement blocked
 system_maturity: mvp
 target_maturity: production
 active_work_unit: CI-001
 repository_branch: codex/github-actions-gates
-repository_revision: ccbaa9e04755638e3acc7136eb6fb5d7faa3bb77
-revision_scope: CI branch base; Git records the implementation commits
+repository_revision: 50362b6bd3a514d4ecd45b9f10dd37b85351ac07
+revision_scope: Workflow code exercised in hosted CI; later documentation-only commits recorded by Git
 overall_status: IN_PROGRESS
 production_readiness: BLOCKING
 ---
@@ -52,13 +52,13 @@ No application remediation from the assessment has been validated. CI work uses 
 
 ## 05. Current phase
 
-**Phase:** automated engineering gates. **Status:** IN_PROGRESS. The owner requested GitHub Actions and mandatory pre-merge evidence under AI-SWE-006.
+**Phase:** automated engineering gates. **Status:** BLOCKED on owner enforcement and existing security defects. The owner requested GitHub Actions and mandatory pre-merge evidence under AI-SWE-006.
 
 The repository assessment is complete. Phase exit requires validated supplier access controls and session verification; safe HTML handling; recoverable checkout; authoritative price/stock/payment contracts; dependency validation; and regression evidence for critical failure paths. Operational release requirements remain additional gates.
 
 ## 06. Active work unit
 
-**Primary active unit: CI-001 — Automated engineering gates. Owner: Codex. Status: IN_PROGRESS.** Local workflow validation complete; GitHub execution and owner activation remain outstanding.
+**Primary active unit: CI-001 — Automated engineering gates. Implementation: Codex; next owner action: repository admin. Status: BLOCKED.** Workflow publication/execution verified in [PR #1](https://github.com/ugetmoresolutions/ugetmore_application_V2/pull/1); mandatory branch-rule activation is not complete. The PR remains unmerged.
 
 Scope: workflow, starter commerce/security tests, review policy, PR template, CODEOWNERS, owner-installable main ruleset, dependency update configuration and operating documentation. No application fixes or automatic merge/deploy. Acceptance: workflow syntax valid; clean-install checks executed; negative security tests expose known defects; aggregate gate fails on failing prerequisites; PR run observed; owner enables rules before technical merge enforcement is claimed. GitHub reports current account has write but not admin access, so ruleset activation is blocked externally.
 
@@ -73,6 +73,7 @@ Before taking the next unit, assign an owner and record its scope. The observed 
 | REPO-001 — Repository access | VALIDATED | Authenticated GitHub repository access and remote HEAD checked; assessed application revision recorded above. |
 | ASSESS-001 — Repository assessment | VALIDATED | Architecture inventory, targeted commerce/security review, all 13 AI-SWE capabilities and full readiness gate documented in linked report. Assessment completion does not mean defects are resolved. |
 | CHECK-001 — Development checks on assessed working tree | VALIDATED | `npm run build`, `npm run lint` and TypeScript no-emit check passed on 17 September before subsequent dependency edits. Not a clean-checkout or current dependency validation. |
+| CI-CHECK-001 — Hosted check execution | VALIDATED | [Run 35207328768](https://github.com/ugetmoresolutions/ugetmore_application_V2/actions/runs/35207328768), revision `50362b6`: clean install, lint, typecheck and build pass; tests/security fail and CI Gate fails accordingly. This validates failure detection, not application safety or mandatory merge enforcement. |
 
 No payment, database isolation, deployment, restoration or production workflow is marked validated.
 
@@ -87,7 +88,7 @@ No payment, database isolation, deployment, restoration or production workflow i
 | DEP-001 | READY | Identify owner/intent of local package changes; review compatibility and reconcile lockfile before clean-install, build, lint, typecheck and audit. |
 | API-001 | BLOCKED | Inspect backend identity, ownership, stock/pricing, order transactions and payment notification/idempotency controls. Needs backend source/specification and safe test environment. |
 | QA-001 | PLANNED | Add regression tests and CI for security, commerce and integration failure paths; validate mobile and accessibility flows. |
-| CI-001 | IN_PROGRESS | Local workflow checks validated; GitHub execution and owner branch-rule activation tracked below. |
+| CI-001 | BLOCKED | Workflow execution verified; admin activation, existing defect remediation and independent approval remain outstanding. |
 | OPS-001 | BLOCKED | Verify staging/production, monitoring, backups, restore and rollback. Needs runtime access, owners and operational evidence. |
 
 Infrastructure expansion and broad refactoring are DEFERRED until requirements or measured bottlenecks justify them. READY means actionable scope, not that an owner has started it or that provider/account changes have been approved.
@@ -158,19 +159,23 @@ All findings below remain **OPEN** unless a later state version records fix evid
 | Recovery/deployment | NOT VERIFIED. No restore, rollback or deployment acceptance performed. |
 | Production readiness | BLOCKING. The full gate is in the assessment; no production-ready claim is supported. |
 
+**Review state (PR #1, workflow revision `50362b6`):** hosted lint/typecheck/build PASS; tests FAIL (5 pass, 2 fail); dependency security FAIL; secret scanning FAIL (one supplier credential); AI engineering review SKIPPED because secret scanning failed; final CI Gate FAIL. Hosted run finished, it was not merely queued. Mocked review-control checks passed for clear findings, material findings, malformed output and unavailable service; real model inference remains unverified. Human review NOT APPROVED. Merge policy BLOCKED, while server-side enforcement is NOT ENABLED with this account. No deployment or runtime approval is claimed.
+
 Historical checks used an already modified lockfile/installed dependencies. Build tooling selected an ancestor lockfile and automatically rewrote a Flowbite CSS directive, later restored. The environment emitted a warning that Node TLS verification was disabled; that setting was not introduced by the assessment. Reproduce checks in a clean, correctly configured environment before release.
 
 ## 16. Environment & deployment state
 
 - **Development:** local build previously completed; current dependency state needs revalidation.
 - **Test/staging/production:** availability, access and configuration UNKNOWN; do not label absent or healthy without inspection.
-- **CI/CD:** `Engineering checks` implemented on CI branch; activation and latest run evidence pending. Ruleset creation attempted and denied (HTTP 404); account permissions explicitly show admin=false. No active rulesets returned. Direct pushes/merges are not yet technically gated. See [owner setup](docs/engineering-gates.md).
+- **CI/CD:** `Engineering checks` running on CI branch and PR #1; complete run evidence above. Ruleset creation attempted and denied (HTTP 404); account permissions explicitly show admin=false. No active rulesets returned. Direct pushes/merges are not yet technically gated. See [owner setup](docs/engineering-gates.md). Main does not contain these workflows until an approved merge; CODEOWNERS/Dependabot bootstrap remains pending.
 - **Latest application deployment:** UNKNOWN. Pushing these documents is not an application deployment or proof that external auto-deployment succeeded.
 - **Database, HTTPS, secrets, backups, restoration and rollback:** operational evidence outstanding.
 
 ## 17. Recent material changes
 
 **2026-09-17:** repository access verified; comprehensive assessment and local baseline checks completed; security/commerce findings recorded. Subsequent local manifest/lockfile changes observed with unknown ownership and no fresh validation. Added this state snapshot and linked assessment for GitHub collaboration; no application remediation is included in this documentation change.
+
+**2026-09-17 — CI-001:** published PR #1 from isolated `codex/github-actions-gates`; hosted run validated lint/types/build and exposed known security failures. Required CI Gate name is reserved for PR/merge-group runs; ordinary pushes use Branch validation to avoid satisfying a PR requirement without AI review. Added one precise scanner false-positive exclusion for the reset-step enum; real supplier credentials remain detected. Original worktree package edits preserved. Owner ruleset activation denied for current write-only account.
 
 ## 18. Blockers
 
@@ -185,6 +190,6 @@ Historical checks used an already modified lockfile/installed dependencies. Buil
 
 ## 19. Next action
 
-**Current next action: CI-001 — observe the PR checks and have the repository admin activate the prepared main ruleset.** Verify CI Gate reports failure on the known negative tests/security findings and that main cannot be merged without checks and independent approval. Workflow publication alone is not enforcement.
+**Current next action: CI-001 — repository admin reviews PR #1 and activates the prepared main ruleset.** CI Gate already reports failure on known negative tests/security findings; independently verify that main cannot be merged without checks and owner approval after activation. Workflow publication alone is not enforcement. Keep this PR unmerged while critical findings remain; remediation work must retain the failing expectations until real fixes pass.
 
 **Transition condition:** only mark merge control VALIDATED after server-side rule activation and evidence of a blocked failing PR. Then claim SEC-001 to remediate supplier credential/proxy exposure and SEC-002 for the failing auth/HTML expectations; keep all related blockers visible. Application and production approval remain blocked.
