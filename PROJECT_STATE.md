@@ -1,9 +1,9 @@
 ---
 project: UGETMORE e-commerce platform
-state_version: 3
-last_updated: "2026-09-17T11:53:51+02:00"
+state_version: 4
+last_updated: "2026-09-17T16:40:06+02:00"
 updated_by: Codex, at repository owner's request
-current_phase: Automated engineering gates exercised; owner enforcement blocked
+current_phase: Mandatory merge rules active; baseline remediation blocked
 system_maturity: mvp
 target_maturity: production
 active_work_unit: CI-001
@@ -52,15 +52,15 @@ No application remediation from the assessment has been validated. CI work uses 
 
 ## 05. Current phase
 
-**Phase:** automated engineering gates. **Status:** BLOCKED on owner enforcement and existing security defects. The owner requested GitHub Actions and mandatory pre-merge evidence under AI-SWE-006.
+**Phase:** automated engineering gates. **Status:** BLOCKED on existing security defects and independent approval. The owner requested GitHub Actions and mandatory pre-merge evidence under AI-SWE-006.
 
 The repository assessment is complete. Phase exit requires validated supplier access controls and session verification; safe HTML handling; recoverable checkout; authoritative price/stock/payment contracts; dependency validation; and regression evidence for critical failure paths. Operational release requirements remain additional gates.
 
 ## 06. Active work unit
 
-**Primary active unit: CI-001 — Automated engineering gates. Implementation: Codex; next owner action: repository admin. Status: BLOCKED.** Workflow publication/execution verified in [PR #1](https://github.com/ugetmoresolutions/ugetmore_application_V2/pull/1); mandatory branch-rule activation is not complete. The PR remains unmerged.
+**Primary active unit: CI-001 — Automated engineering gates. Implementation: Codex; next work: security remediation and independent review. Status: BLOCKED.** Workflow publication/execution verified in [PR #1](https://github.com/ugetmoresolutions-org/ugetmore_application_V2/pull/1); mandatory branch rules are active and effective on main. The PR remains unmerged.
 
-Scope: workflow, starter commerce/security tests, review policy, PR template, CODEOWNERS, owner-installable main ruleset, dependency update configuration and operating documentation. No application fixes or automatic merge/deploy. Acceptance: workflow syntax valid; clean-install checks executed; negative security tests expose known defects; aggregate gate fails on failing prerequisites; PR run observed; owner enables rules before technical merge enforcement is claimed. GitHub reports current account has write but not admin access, so ruleset activation is blocked externally.
+Scope: workflow, starter commerce/security tests, review policy, PR template, CODEOWNERS, owner-installable main ruleset, dependency update configuration and operating documentation. No application fixes or automatic merge/deploy. Acceptance: workflow syntax valid; clean-install checks executed; negative security tests expose known defects; aggregate gate fails on failing prerequisites; PR run observed; owner enables rules before technical merge enforcement is claimed. GitHub now reports admin access for Mnqobi-Developer. Ruleset 23605355 is active; effective main rules were verified and PR #1 reports BLOCKED / REVIEW_REQUIRED.
 
 **STATE-001 — Establish collaborator state:** documentation scope is `PROJECT_STATE.md` and the linked assessment. Acceptance: all 19 state sections present, findings accurately qualified, no secrets/customer records included, links resolve, and only intended documentation is committed. Publication is verified through Git remote history; this snapshot does not claim an application deployment.
 
@@ -73,7 +73,7 @@ Before taking the next unit, assign an owner and record its scope. The observed 
 | REPO-001 — Repository access | VALIDATED | Authenticated GitHub repository access and remote HEAD checked; assessed application revision recorded above. |
 | ASSESS-001 — Repository assessment | VALIDATED | Architecture inventory, targeted commerce/security review, all 13 AI-SWE capabilities and full readiness gate documented in linked report. Assessment completion does not mean defects are resolved. |
 | CHECK-001 — Development checks on assessed working tree | VALIDATED | `npm run build`, `npm run lint` and TypeScript no-emit check passed on 17 September before subsequent dependency edits. Not a clean-checkout or current dependency validation. |
-| CI-CHECK-001 — Hosted check execution | VALIDATED | [Run 35207328768](https://github.com/ugetmoresolutions/ugetmore_application_V2/actions/runs/35207328768), revision `50362b6`: clean install, lint, typecheck and build pass; tests/security fail and CI Gate fails accordingly. This validates failure detection, not application safety or mandatory merge enforcement. |
+| CI-CHECK-001 — Hosted check execution | VALIDATED | [Run 35207328768](https://github.com/ugetmoresolutions-org/ugetmore_application_V2/actions/runs/35207328768), revision `50362b6`: clean install, lint, typecheck and build pass; tests/security fail and CI Gate fails accordingly. This validates failure detection, not application safety or mandatory merge enforcement. |
 
 No payment, database isolation, deployment, restoration or production workflow is marked validated.
 
@@ -88,7 +88,7 @@ No payment, database isolation, deployment, restoration or production workflow i
 | DEP-001 | READY | Identify owner/intent of local package changes; review compatibility and reconcile lockfile before clean-install, build, lint, typecheck and audit. |
 | API-001 | BLOCKED | Inspect backend identity, ownership, stock/pricing, order transactions and payment notification/idempotency controls. Needs backend source/specification and safe test environment. |
 | QA-001 | PLANNED | Add regression tests and CI for security, commerce and integration failure paths; validate mobile and accessibility flows. |
-| CI-001 | BLOCKED | Workflow execution verified; admin activation, existing defect remediation and independent approval remain outstanding. |
+| CI-001 | BLOCKED | Workflow execution verified; main rules active; existing defect remediation, real model review and independent approval remain outstanding. |
 | OPS-001 | BLOCKED | Verify staging/production, monitoring, backups, restore and rollback. Needs runtime access, owners and operational evidence. |
 
 Infrastructure expansion and broad refactoring are DEFERRED until requirements or measured bottlenecks justify them. READY means actionable scope, not that an owner has started it or that provider/account changes have been approved.
@@ -108,7 +108,7 @@ Infrastructure expansion and broad refactoring are DEFERRED until requirements o
 | DEC-002 | ACTIVE | Publish this documentation independently of unrelated package edits, preserving their ownership and validation boundary. |
 | DEC-003 | PROPOSED | Stabilize the existing Next.js/external-API architecture before broad redesign. Current evidence does not justify distributed infrastructure expansion. |
 | DEC-004 | PROPOSED | Make the backend authoritative for identity, resource ownership, prices, stock, coupons and paid orders. Validate against actual backend implementation before choosing integration changes. |
-| DEC-005 | ACTIVE | User requested AI-SWE-006 merge controls. Fail closed on required test/security/review failures; no automatic merge/deployment and no baseline suppression to obtain green CI. Owner activation of branch rules remains required. |
+| DEC-005 | ACTIVE | User requested AI-SWE-006 merge controls. Fail closed on required test/security/review failures; no automatic merge/deployment and no baseline suppression to obtain green CI. Main ruleset 23605355 is active with no bypass actors. |
 
 Record superseding decisions explicitly; do not overwrite prior architectural decisions silently.
 
@@ -159,7 +159,7 @@ All findings below remain **OPEN** unless a later state version records fix evid
 | Recovery/deployment | NOT VERIFIED. No restore, rollback or deployment acceptance performed. |
 | Production readiness | BLOCKING. The full gate is in the assessment; no production-ready claim is supported. |
 
-**Review state (PR #1, workflow revision `50362b6`):** hosted lint/typecheck/build PASS; tests FAIL (5 pass, 2 fail); dependency security FAIL; secret scanning FAIL (one supplier credential); AI engineering review SKIPPED because secret scanning failed; final CI Gate FAIL. Hosted run finished, it was not merely queued. Mocked review-control checks passed for clear findings, material findings, malformed output and unavailable service; real model inference remains unverified. Human review NOT APPROVED. Merge policy BLOCKED, while server-side enforcement is NOT ENABLED with this account. No deployment or runtime approval is claimed.
+**Review state (PR #1, workflow revision `50362b6`):** hosted lint/typecheck/build PASS; tests FAIL (5 pass, 2 fail); dependency security FAIL; secret scanning FAIL (one supplier credential); AI engineering review SKIPPED because secret scanning failed; final CI Gate FAIL. Hosted run finished, it was not merely queued. Mocked review-control checks passed for clear findings, material findings, malformed output and unavailable service; real model inference remains unverified. Human review NOT APPROVED. Merge status BLOCKED / REVIEW_REQUIRED after server-side rule activation; admin access verified. No deployment or runtime approval is claimed.
 
 Historical checks used an already modified lockfile/installed dependencies. Build tooling selected an ancestor lockfile and automatically rewrote a Flowbite CSS directive, later restored. The environment emitted a warning that Node TLS verification was disabled; that setting was not introduced by the assessment. Reproduce checks in a clean, correctly configured environment before release.
 
@@ -167,7 +167,7 @@ Historical checks used an already modified lockfile/installed dependencies. Buil
 
 - **Development:** local build previously completed; current dependency state needs revalidation.
 - **Test/staging/production:** availability, access and configuration UNKNOWN; do not label absent or healthy without inspection.
-- **CI/CD:** `Engineering checks` running on CI branch and PR #1; complete run evidence above. Ruleset creation attempted and denied (HTTP 404); account permissions explicitly show admin=false. No active rulesets returned. Direct pushes/merges are not yet technically gated. See [owner setup](docs/engineering-gates.md). Main does not contain these workflows until an approved merge; CODEOWNERS/Dependabot bootstrap remains pending.
+- **CI/CD:** `Engineering checks` running on CI branch and PR #1; complete run evidence above. Initial activation was denied with write-only access. After admin access was granted, ruleset 23605355 was activated and effective main rules verified. Main requires PR approval and passing CI Gate with no bypass actors. The repository now resides under ugetmoresolutions-org. See [owner setup](docs/engineering-gates.md). Main does not contain these workflows until an approved merge; CODEOWNERS/Dependabot bootstrap remains pending.
 - **Latest application deployment:** UNKNOWN. Pushing these documents is not an application deployment or proof that external auto-deployment succeeded.
 - **Database, HTTPS, secrets, backups, restoration and rollback:** operational evidence outstanding.
 
@@ -175,7 +175,7 @@ Historical checks used an already modified lockfile/installed dependencies. Buil
 
 **2026-09-17:** repository access verified; comprehensive assessment and local baseline checks completed; security/commerce findings recorded. Subsequent local manifest/lockfile changes observed with unknown ownership and no fresh validation. Added this state snapshot and linked assessment for GitHub collaboration; no application remediation is included in this documentation change.
 
-**2026-09-17 — CI-001:** published PR #1 from isolated `codex/github-actions-gates`; hosted run validated lint/types/build and exposed known security failures. Required CI Gate name is reserved for PR/merge-group runs; ordinary pushes use Branch validation to avoid satisfying a PR requirement without AI review. Added one precise scanner false-positive exclusion for the reset-step enum; real supplier credentials remain detected. Original worktree package edits preserved. Owner ruleset activation denied for current write-only account.
+**2026-09-17 — CI-001:** published PR #1 from isolated `codex/github-actions-gates`; hosted run validated lint/types/build and exposed known security failures. Required CI Gate name is reserved for PR/merge-group runs; ordinary pushes use Branch validation to avoid satisfying a PR requirement without AI review. Added one precise scanner false-positive exclusion for the reset-step enum; real supplier credentials remain detected. Original worktree package edits preserved. Initial activation was denied for the then write-only account. Subsequently admin access was verified, ruleset 23605355 activated, and effective main rules read back. PR #1 reports BLOCKED / REVIEW_REQUIRED; BLOCK-005 is resolved.
 
 ## 18. Blockers
 
@@ -185,11 +185,11 @@ Historical checks used an already modified lockfile/installed dependencies. Buil
 | BLOCK-002 | API-001; integrated auth/payment approval | Provide backend repository/specification and staging test setup; demonstrate ownership, price/stock enforcement and payment notification/idempotency behavior. |
 | BLOCK-003 | OPS-001; production approval | Identify infrastructure owner and produce hosting, HTTPS, monitoring, backup/restore and rollback evidence. |
 | BLOCK-004 | Reusing historical validation for package edits | Establish package-change ownership, reconcile intended versions and run clean validation. This does not prevent independent documentation or isolated source fixes. |
-| BLOCK-005 | CI-001 mandatory merge enforcement | Repository admin must activate `.github/main-ruleset.json`, require CI Gate and independent owner approval, and verify blocked merge on a failing disposable PR. Current identity has write access only. |
+| BLOCK-005 — RESOLVED | CI-001 mandatory merge enforcement | Ruleset 23605355 active; effective main rules require CI Gate and independent approval. Existing failing PR #1 reports BLOCKED / REVIEW_REQUIRED. No merge attempted. |
 | BLOCK-006 | AI review/runtime review completion | GitHub Models access/quota and complete diff required. Secret scan must pass before source reaches model review; no skipped/unavailable review is treated as approval. |
 
 ## 19. Next action
 
-**Current next action: CI-001 — repository admin reviews PR #1 and activates the prepared main ruleset.** CI Gate already reports failure on known negative tests/security findings; independently verify that main cannot be merged without checks and owner approval after activation. Workflow publication alone is not enforcement. Keep this PR unmerged while critical findings remain; remediation work must retain the failing expectations until real fixes pass.
+**Current next action: claim SEC-001 to remediate supplier credential/proxy exposure.** Main merge controls are VALIDATED. Keep PR #1 unmerged while required checks fail; retain security expectations until real fixes pass. Credential rotation requires the supplier account owner; historical secret remediation requires a reviewed decision.
 
-**Transition condition:** only mark merge control VALIDATED after server-side rule activation and evidence of a blocked failing PR. Then claim SEC-001 to remediate supplier credential/proxy exposure and SEC-002 for the failing auth/HTML expectations; keep all related blockers visible. Application and production approval remain blocked.
+**Transition condition:** address SEC-002 authentication/HTML failures and DEP-001 dependencies, then obtain successful real model review and independent human approval before merge. Application and production approval remain blocked.

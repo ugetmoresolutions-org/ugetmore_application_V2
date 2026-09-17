@@ -30,27 +30,26 @@ npm run build
 npm audit --audit-level=high
 ```
 
-## Required owner setup — this is what blocks merging
+## Active mandatory merge rules
 
-At setup time `Mnqobi-Developer` has repository **write**, not admin, permission. `ugetmoresolutions` is the current admin. Workflow failures alone cannot prevent a collaborator from merging or pushing to an unprotected branch.
+On 17 September 2026, admin access for `Mnqobi-Developer` was verified and [ruleset 23605355](https://github.com/ugetmoresolutions-org/ugetmore_application_V2/rules/23605355) was activated. The repository moved to `ugetmoresolutions-org/ugetmore_application_V2`. The earlier write-only permission blocker is resolved.
 
-The owner should review the PR and [.github/main-ruleset.json](../.github/main-ruleset.json). After checking for an existing equivalent rule, use an owner-authenticated GitHub CLI from this branch:
+Effective rules for main were read back through GitHub's API. PR #1 reports **BLOCKED / REVIEW_REQUIRED**. No merge was attempted. The rule has no bypass actors and requires a PR, one approving review, code-owner review where applicable, approval of the latest push by someone other than its pusher, dismissed stale approvals, resolved threads and an up-to-date successful **CI Gate** from GitHub Actions (app ID 15368). Branch deletion and force pushes are blocked.
+
+The committed [.github/main-ruleset.json](../.github/main-ruleset.json) is the configuration template; the live server-side rule provides enforcement. Inspect it with:
 
 ```sh
-gh api --method POST repos/ugetmoresolutions/ugetmore_application_V2/rulesets --input .github/main-ruleset.json
-gh api repos/ugetmoresolutions/ugetmore_application_V2/rulesets
-gh api repos/ugetmoresolutions/ugetmore_application_V2/rules/branches/main
+gh api repos/ugetmoresolutions-org/ugetmore_application_V2/rulesets/23605355
+gh api repos/ugetmoresolutions-org/ugetmore_application_V2/rules/branches/main
 ```
 
-Create once; update an existing rule instead of duplicating it. The rule targets main, has no bypass actors, requires a PR, one approving code-owner review, approval of the latest push, dismissed stale approvals, resolved threads and an up-to-date successful **CI Gate** from GitHub Actions (app ID 15368). It blocks branch deletion and force pushes. All paths require the current admin code owner; add additional qualified owners to avoid a single-reviewer bottleneck. A PR authored by the only code owner will need another eligible code owner.
-
-Branch rules are server-side configuration: committing JSON does **not** activate them. Keep this distinction visible in PROJECT_STATE.md. Once active, verify with a disposable PR that a failing check blocks merging; do not test by pushing to main. The initial PR is deliberately unmerged while critical baseline failures remain. Remediate them on reviewed branches; do not bypass the gate for bootstrap convenience. Until the owner installs rules, direct pushes remain technically possible and must not be described as prohibited by GitHub.
+Update the existing rule instead of creating duplicates. The initial PR remains unmerged while critical baseline failures remain. Remediate them on reviewed branches without bypassing the gate. Ensure configured code owners retain write access after the repository transfer; add qualified owners to avoid a single-reviewer bottleneck.
 
 After workflows reach main, CODEOWNERS and Dependabot operate from the default branch. Bootstrap owner review must be requested/obtained explicitly because CODEOWNERS is not yet on main. No independent approval is claimed by this setup.
 
 ## Finding and release policy
 
-Hosted validation on 17 September 2026: [PR run 35207328768](https://github.com/ugetmoresolutions/ugetmore_application_V2/actions/runs/35207328768) at `50362b6` passed lint, typecheck and build. Tests reported five passing and two failing security expectations; dependency and secret scans failed; AI review was skipped after secret-scan failure; CI Gate failed. This demonstrates that known failures propagate, not that GitHub branch protection is active. Real Models inference is still unverified; mocked control-flow checks covered clean findings, material findings, malformed output and service denial.
+Hosted validation on 17 September 2026: [PR run 35207328768](https://github.com/ugetmoresolutions-org/ugetmore_application_V2/actions/runs/35207328768) at `50362b6` passed lint, typecheck and build. Tests reported five passing and two failing security expectations; dependency and secret scans failed; AI review was skipped after secret-scan failure; CI Gate failed. This demonstrates that known failures propagate, not application safety. Mandatory main rules were subsequently activated and verified as described above. Real Models inference is still unverified; mocked control-flow checks covered clean findings, material findings, malformed output and service denial.
 
 See [the project review policy](../.github/ENGINEERING_REVIEW.md). Critical/high/medium findings block; low findings are advisory. No label-based exception bypass exists. Record disputed findings and evidence; independent review must establish a false positive before changing the gate or affected code. Existing secrets in history require rotation and a separately reviewed historical-remediation decision, not an unchecked scanner allowlist.
 
