@@ -1,15 +1,15 @@
 ---
 project: UGETMORE e-commerce platform
-state_version: 6
-last_updated: "2026-10-01"
-updated_by: Codex, at repository owner's request
-current_phase: Mandatory merge rules active; baseline remediation blocked
+state_version: 7
+last_updated: "2026-10-01T16:05:00+02:00"
+updated_by: Claude (Sonnet 5), at repository owner's request
+current_phase: PR #2 merged to main despite a failing CI Gate; F03 and historical secret scan are red on main itself now, not just a feature branch
 system_maturity: mvp
 target_maturity: production
-active_work_unit: CI-001
-repository_branch: codex/github-actions-gates
-repository_revision: cc01c4f1d1d16e4bc49361bfb900da98c7b1027b
-revision_scope: Application and workflow code validated by hosted run 36856476251; subsequent changes are documentation only
+active_work_unit: null
+repository_branch: main
+repository_revision: d8042a6c2e7c58aec880701ee248b7e0006f6567
+revision_scope: Verified directly against a fresh clone/install on 1 October — see section 07 CI-CHECK-002
 overall_status: IN_PROGRESS
 production_readiness: BLOCKING
 ---
@@ -58,9 +58,11 @@ The repository assessment is complete. Phase exit requires validated supplier ac
 
 ## 06. Active work unit
 
-**Primary active unit: CI-001 — Automated engineering gates. Implementation: Codex; active owner: Codex. Status: BLOCKED. Integrating PR #2 supplier containment into PR #1, reconciling both test suites, fixing HTML sanitization and dependency failures. JWT contract and supplier revocation remain external prerequisites.** Workflow publication/execution verified in [PR #1](https://github.com/ugetmoresolutions-org/ugetmore_application_V2/pull/1); mandatory branch rules are active and effective on main. The PR remains unmerged.
+**Primary active unit: none.** The situation this section previously described has changed: [PR #2](https://github.com/ugetmoresolutions-org/ugetmore_application_V2/pull/2) ("Contain supplier access and add required engineering checks," which had absorbed PR #1's CI-gates/dependency/HTML work via commit `cc01c4f`) **was merged into `main`** at `d8042a6` on 2026-10-01T12:17:19Z by `Mnqobi-Developer`, with one collaborator review from `Katli-Dev`. [PR #1](https://github.com/ugetmoresolutions-org/ugetmore_application_V2/pull/1) is now CLOSED (superseded, not merged separately).
 
-Scope: workflow, starter commerce/security tests, review policy, PR template, CODEOWNERS, owner-installable main ruleset, dependency update configuration and operating documentation. Supplier containment, HTML sanitization and dependency fixes are now included; no automatic merge/deploy. Acceptance: workflow syntax valid; clean-install checks executed; negative security tests expose known defects; aggregate gate fails on failing prerequisites; PR run observed; owner enables rules before technical merge enforcement is claimed. GitHub now reports admin access for Mnqobi-Developer. Ruleset 23605355 is active; effective main rules were verified and PR #1 reports BLOCKED / REVIEW_REQUIRED.
+**This merge happened despite the hosted CI Gate reporting FAILURE** (confirmed via `gh pr view 2 --json statusCheckRollup`): `test` = FAILURE (F03), `Secret scanning` = FAILURE (historical credentials), `CI Gate` = FAILURE. `lint`, `typecheck` and `build` all reported SUCCESS. This is not a CI misconfiguration — the gate correctly reported red; it was merged anyway, through the repository owner's own merge action. Record this as fact, not an accusation: the owner may have intentionally accepted a known, pre-existing gap (F03 predates this PR) rather than block the SEC-001 improvement, but the mandatory-review policy described in section 10 (DEC-005) and `docs/engineering-gates.md` was not actually enforced for this merge. Confirm with the owner whether this was intentional before treating the ruleset as reliable going forward.
+
+CI-001 (automated engineering gates) is otherwise substantially complete as infrastructure — see section 08 — but its enforcement guarantee (section 10 DEC-005) has now been demonstrated bypassable by the repository owner's own account, which any future BLOCKING-gate claim must account for.
 
 **STATE-001 — Establish collaborator state:** documentation scope is `PROJECT_STATE.md` and the linked assessment. Acceptance: all 19 state sections present, findings accurately qualified, no secrets/customer records included, links resolve, and only intended documentation is committed. Publication is verified through Git remote history; this snapshot does not claim an application deployment.
 
@@ -74,6 +76,7 @@ Before taking the next unit, assign an owner and record its scope. The observed 
 | ASSESS-001 — Repository assessment | VALIDATED | Architecture inventory, targeted commerce/security review, all 13 AI-SWE capabilities and full readiness gate documented in linked report. Assessment completion does not mean defects are resolved. |
 | CHECK-001 — Development checks on assessed working tree | VALIDATED | `npm run build`, `npm run lint` and TypeScript no-emit check passed on 17 September before subsequent dependency edits. Not a clean-checkout or current dependency validation. |
 | CI-CHECK-001 — Hosted check execution | VALIDATED | [Run 35207328768](https://github.com/ugetmoresolutions-org/ugetmore_application_V2/actions/runs/35207328768), revision `50362b6`: clean install, lint, typecheck and build pass; tests/security fail and CI Gate fails accordingly. This validates failure detection, not application safety or mandatory merge enforcement. |
+| CI-CHECK-002 — Local verification of merged `main` (`d8042a6`) | VALIDATED (with one known FAIL) | Fresh `npm install` (no legacy-peer-deps/force needed), `npm run typecheck` PASS, `npm run build` PASS (all 44 routes), `npm run lint` PASS, `npm test` **exit code 1**: Node suite 7/8 pass — `F03: unsigned admin claims must not authorize an admin route` FAILS (expected `false`, got `true`); Vitest suite 19/19 pass. `npm audit` reports 0 vulnerabilities. This is the actual state of `main` right now, confirmed by this session on 2026-10-01, not CI-branch-only evidence. |
 
 No payment, database isolation, deployment, restoration or production workflow is marked validated.
 
@@ -88,7 +91,7 @@ No payment, database isolation, deployment, restoration or production workflow i
 | DEP-001 | VALIDATED | Reconciled PR #2 package edits in CI worktree; clean npm ci PASS and fresh audit reports zero vulnerabilities. Hosted lint/typecheck/build PASS in run 36856476251. Local build has a machine-specific Google Fonts certificate-chain limitation. This is development validation, not release approval. Original checkout untouched. |
 | API-001 | BLOCKED | Inspect backend identity, ownership, stock/pricing, order transactions and payment notification/idempotency controls. Needs backend source/specification and safe test environment. |
 | QA-001 | PLANNED | Add regression tests and CI for security, commerce and integration failure paths; validate mobile and accessibility flows. |
-| CI-001 | BLOCKED | Workflow execution verified; main rules active; existing defect remediation, real model review and independent approval remain outstanding. |
+| CI-001 | INFRASTRUCTURE COMPLETE; ENFORCEMENT NOT DEMONSTRATED | Workflow, ruleset and review policy are live on `main` and correctly reported FAILURE for F03/secret-scan on PR #2. However that failure did not block the merge (section 06) — the repository owner merged despite it. The gate's *detection* is validated; its *enforcement* is not, until the owner confirms the bypass was intentional and/or the ruleset is reconfigured. |
 | OPS-001 | BLOCKED | Verify staging/production, monitoring, backups, restore and rollback. Needs runtime access, owners and operational evidence. |
 
 Infrastructure expansion and broad refactoring are DEFERRED until requirements or measured bottlenecks justify them. READY means actionable scope, not that an owner has started it or that provider/account changes have been approved.
@@ -194,6 +197,16 @@ Historical checks used an already modified lockfile/installed dependencies. Buil
 
 ## 19. Next action
 
-**Current next action: obtain the backend JWT verification contract and supplier revocation confirmation.** PR #2 is integrated into PR #1; preserve the F03 failure and historical secret gate until their causes are resolved. Do not merge either PR or rewrite shared history to bypass required evidence.
+PR #2 is no longer pending — it is merged into `main` (section 06). The next actions split into what needs the repository owner directly and what is unclaimed engineering work:
 
-**Transition condition:** implement backend-backed JWT verification, resolve the historical secret gate through a reviewed cleanup decision after supplier revocation, then obtain successful real model review and independent human approval. Application and production approval remain blocked.
+**Needs the owner, not code:**
+1. **Confirm whether bypassing the CI Gate to merge PR #2 was intentional.** If not, the ruleset (`.github/main-ruleset.json`, ruleset 23605355) needs reconfiguring so repo-admin merges can't bypass required checks; if intentional, record that decision here explicitly so it isn't mistaken for a gate malfunction later.
+2. **Obtain the backend JWT verification contract** (issuer, audience, signing algorithm, JWKS/public key or a session-verification endpoint) so SEC-002/F03 can be implemented against something real, rather than guessed.
+3. **Rotate the Amrod/Parrot credentials with each supplier** (BLOCK-001) — unchanged from before.
+4. **Decide on historical secret-scan cleanup** (the original Amrod credential plus three synthetic test-fixture matches introduced by PR #2's history) — this needs a deliberate, reviewed decision since remediation likely means rewriting shared git history, which affects every collaborator and this repo's other active worktrees.
+
+**Unclaimed engineering work that doesn't need the above:**
+- **COM-001** — fix the checkout failure modal (`CartPage.tsx`/`hooks/cart.ts`/`PaymentProcessingModal.tsx`, finding F06). Still not started by anyone; independent of the blockers above.
+- **5 open Dependabot PRs** (#3–#8: GitHub Actions version bumps, eslint 10, @types/node 26, react-dom 19.3.0) sitting unreviewed.
+
+**Transition condition:** F03 and the historical secret-scan failure stay recorded as open on `main` itself (not just a feature branch) until the owner provides the backend contract and a rotation/cleanup decision. Do not treat `main`'s passing build/lint/typecheck as evidence those two items are resolved.
