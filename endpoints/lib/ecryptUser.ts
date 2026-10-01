@@ -12,7 +12,6 @@ export const decryptUser = () => {
   }
   
   try {
-    console.log("I am token", encryptedUserCookie);
     return encryptedUserCookie;
   } catch (error) {
     console.log("Decryption or parsing failed:", error);

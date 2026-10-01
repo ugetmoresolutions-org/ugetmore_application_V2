@@ -1,6 +1,7 @@
 // utils/productStorage.ts
 import { IProduct, IProductPrice } from "@/interfaces/product/product";
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import sanitizeHtml from 'sanitize-html';
 
 interface EnhancedProduct extends IProduct {
   price?: number ;
@@ -52,14 +53,12 @@ export function stripHtmlTags(html: string): string {
 export function sanitizeHtmlContent(html: string): string {
   if (!html) return 'No description available';
   
-  // Replace common HTML entities
-  return html
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'");
+  // Parse untrusted markup; never decode escaped tags into executable HTML.
+  return sanitizeHtml(html, {
+    allowedTags: ['p', 'br', 'strong', 'b', 'em', 'i', 'u', 'ul', 'ol', 'li', 'h2', 'h3', 'h4'],
+    allowedAttributes: {},
+    disallowedTagsMode: 'discard',
+  });
 }
 
 /**

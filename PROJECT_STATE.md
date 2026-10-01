@@ -1,15 +1,15 @@
 ---
 project: UGETMORE e-commerce platform
-state_version: 4
-last_updated: "2026-09-17T16:40:06+02:00"
+state_version: 5
+last_updated: "2026-10-01"
 updated_by: Codex, at repository owner's request
 current_phase: Mandatory merge rules active; baseline remediation blocked
 system_maturity: mvp
 target_maturity: production
 active_work_unit: CI-001
 repository_branch: codex/github-actions-gates
-repository_revision: 50362b6bd3a514d4ecd45b9f10dd37b85351ac07
-revision_scope: Workflow code exercised in hosted CI; later documentation-only commits recorded by Git
+repository_revision: f1e27b850a93b69a1af6ed0dade610cf8e01f181
+revision_scope: Parent CI head before PR 2 integration and remediation; containing commit identified by Git history
 overall_status: IN_PROGRESS
 production_readiness: BLOCKING
 ---
@@ -40,7 +40,7 @@ Delivery objective: stabilize the existing application and demonstrate secure, r
 | Infrastructure | Local production build previously passed. Five Next.js API route files implement supplier proxies and Amrod cache/status operations. Live infrastructure unverified. |
 | Integrations | Amrod, Parrot, Tarsus and backend-mediated PayFast payment generation. Live permissions, callbacks and reconciliation unverified. |
 
-No application remediation from the assessment has been validated. CI work uses an isolated worktree based on committed main; the original worktree's package edits are preserved. See sections 09 and 15.
+PR #2 supplier containment is integrated into the CI branch. HTML sanitization and safe supplier-error logging are implemented with local regression evidence. JWT verification, historical credential revocation/cleanup and release acceptance remain blocked. The original checkout is preserved. See sections 09 and 15.
 
 ## 04. Architecture snapshot
 
@@ -58,9 +58,9 @@ The repository assessment is complete. Phase exit requires validated supplier ac
 
 ## 06. Active work unit
 
-**Primary active unit: CI-001 — Automated engineering gates. Implementation: Codex; next work: security remediation and independent review. Status: BLOCKED.** Workflow publication/execution verified in [PR #1](https://github.com/ugetmoresolutions-org/ugetmore_application_V2/pull/1); mandatory branch rules are active and effective on main. The PR remains unmerged.
+**Primary active unit: CI-001 — Automated engineering gates. Implementation: Codex; active owner: Codex. Status: BLOCKED. Integrating PR #2 supplier containment into PR #1, reconciling both test suites, fixing HTML sanitization and dependency failures. JWT contract and supplier revocation remain external prerequisites.** Workflow publication/execution verified in [PR #1](https://github.com/ugetmoresolutions-org/ugetmore_application_V2/pull/1); mandatory branch rules are active and effective on main. The PR remains unmerged.
 
-Scope: workflow, starter commerce/security tests, review policy, PR template, CODEOWNERS, owner-installable main ruleset, dependency update configuration and operating documentation. No application fixes or automatic merge/deploy. Acceptance: workflow syntax valid; clean-install checks executed; negative security tests expose known defects; aggregate gate fails on failing prerequisites; PR run observed; owner enables rules before technical merge enforcement is claimed. GitHub now reports admin access for Mnqobi-Developer. Ruleset 23605355 is active; effective main rules were verified and PR #1 reports BLOCKED / REVIEW_REQUIRED.
+Scope: workflow, starter commerce/security tests, review policy, PR template, CODEOWNERS, owner-installable main ruleset, dependency update configuration and operating documentation. Supplier containment, HTML sanitization and dependency fixes are now included; no automatic merge/deploy. Acceptance: workflow syntax valid; clean-install checks executed; negative security tests expose known defects; aggregate gate fails on failing prerequisites; PR run observed; owner enables rules before technical merge enforcement is claimed. GitHub now reports admin access for Mnqobi-Developer. Ruleset 23605355 is active; effective main rules were verified and PR #1 reports BLOCKED / REVIEW_REQUIRED.
 
 **STATE-001 — Establish collaborator state:** documentation scope is `PROJECT_STATE.md` and the linked assessment. Acceptance: all 19 state sections present, findings accurately qualified, no secrets/customer records included, links resolve, and only intended documentation is committed. Publication is verified through Git remote history; this snapshot does not claim an application deployment.
 
@@ -81,11 +81,11 @@ No payment, database isolation, deployment, restoration or production workflow i
 
 | Unit | Status | Scope / completion evidence |
 | --- | --- | --- |
-| SEC-001 | READY | Restrict supplier proxy methods/paths, protect privileged operations, externalize supplier credentials. Offline tests must show anonymous privileged calls cannot reach supplier handlers. Credential rotation tracked separately below. |
-| SEC-002 | PLANNED | Verify sessions at trusted boundaries, sanitize descriptions, remove sensitive token handling/logging. Invalid tokens rejected; hostile descriptions inert. Requires backend auth contract for integration. |
+| SEC-001 | IMPLEMENTED | PR #2 GET allowlists and server-only credentials integrated; offline supplier tests pass. Added error-log redaction tests. Live credential rotation and historical cleanup remain unverified; privileged cache/status endpoints require follow-up. |
+| SEC-002 | PLANNED | HTML descriptions sanitized and token console logging removed. JWT/session verification and server-set HttpOnly cookie design still require the backend auth contract; F03 test remains red. |
 | COM-001 | READY | Fix failed-checkout modal, response/error contract and retry/cancel behavior. Mock payment generation failure and confirm UI recovery. |
 | COM-002 | PLANNED | Remove fabricated price/stock; unify cart/document totals; persist guest artwork durably; fix search fallback/cancellation. Cover boundary and reload cases. |
-| DEP-001 | READY | Identify owner/intent of local package changes; review compatibility and reconcile lockfile before clean-install, build, lint, typecheck and audit. |
+| DEP-001 | IN_PROGRESS | Reconciled PR #2 package edits in CI worktree; clean npm ci PASS and fresh audit reports zero vulnerabilities. Lint/typecheck PASS. Local build blocked fetching Google Fonts by SELF_SIGNED_CERT_IN_CHAIN with TLS verification enabled; hosted build pending. Original checkout untouched. |
 | API-001 | BLOCKED | Inspect backend identity, ownership, stock/pricing, order transactions and payment notification/idempotency controls. Needs backend source/specification and safe test environment. |
 | QA-001 | PLANNED | Add regression tests and CI for security, commerce and integration failure paths; validate mobile and accessibility flows. |
 | CI-001 | BLOCKED | Workflow execution verified; main rules active; existing defect remediation, real model review and independent approval remain outstanding. |
@@ -97,7 +97,7 @@ Infrastructure expansion and broad refactoring are DEFERRED until requirements o
 
 - SEC-001 code containment and COM-001 UI recovery can proceed independently of backend discovery. Use isolated fixtures instead of production supplier/payment mutations.
 - Integrated SEC-002 and COM-002 approval require the relevant API-001 contracts. Release approval requires all applicable security, commerce, QA and operations gates.
-- Baseline manifest: Next 15.4.10, React 19.1.0. At snapshot preparation, **uncommitted** manifest changes request Next `^15.5.25`, Flowbite React `^0.10.2`, ExcelJS `^3.4.0` and react-multi-carousel `^2.8.5`, with a modified lockfile. These edits are **IMPLEMENTED_UNVERIFIED**, owner unknown, and excluded from this documentation publication. Do not treat requested versions as installed or tested versions.
+- The previously uncommitted package edits were subsequently included in PR #2. CI integration reconciles them: Next 15.5.27, matching ESLint config, Flowbite React 0.12.17 with patched deepmerge, react-multi-carousel 2.8.5, removal of unused ExcelJS, official SheetJS 0.20.3 and patched PostCSS. Node 22 types match CI/Vitest. The lockfile was regenerated and clean installation passed; npm audit reports zero vulnerabilities on 1 October. See remediation decisions for compatibility tests and override rationale.
 - The earlier audit found 26 affected package entries (1 critical, 19 high, 5 moderate, 1 low). This is historical evidence for the assessed dependency state; a new audit is required after reconciliation.
 
 ## 10. Decision register
@@ -129,14 +129,14 @@ Record superseding decisions explicitly; do not overwrite prior architectural de
 
 ## 13. Known issues
 
-All findings below remain **OPEN** unless a later state version records fix evidence. F-identifiers map to exact references in the assessment.
+F-identifiers map to the dated assessment. F04 HTML sanitization and F08 dependency remediation are locally validated; F01 current-source credentials and F02 catalog proxies are contained by PR #2. Historical credentials, supplier rotation, authentication and remaining findings stay open. The table below retains original impact and severity.
 
 | Findings | Severity | Impact / affected approval |
 | --- | --- | --- |
 | F01–F02 | CRITICAL | Committed supplier credentials and unauthenticated credential-bearing proxy; block safe public exposure. Credential validity was not tested. |
 | F03–F05 | HIGH | Unverified JWT authorization, unsafe description HTML and browser-readable token handling; block security approval. Backend compromise has not been demonstrated. |
 | F06–F07 | HIGH | Checkout failure trap and invented fallback price/stock; block commerce approval. |
-| F08 | CRITICAL | Historical dependency audit includes a critical package rating; exploit conditions vary. Pending dependency changes have not been validated. |
+| F08 | CRITICAL | Historical dependency finding; current CI-branch audit reports zero vulnerabilities after reconciliation. Full application release acceptance remains outstanding. |
 | F09–F11 | MEDIUM | Search fallback/cancellation, guest artwork persistence and misleading Amrod cache/status operations. |
 | F12–F14 | MEDIUM | Shipping/document discrepancies, synthetic pre-payment receipts and inconsistent error contracts. |
 
@@ -150,16 +150,16 @@ All findings below remain **OPEN** unless a later state version records fix evid
 
 | Area | Evidence / current limit |
 | --- | --- |
-| Build, lint, TypeScript | CI branch clean `npm ci --ignore-scripts` PASS, lint/typecheck/build PASS on committed dependency baseline. Original worktree dependency edits remain NOT RUN. Actionlint and embedded review JavaScript parse PASS. |
-| Unit/integration/E2E | CI-001 adds four commerce tests (local PASS) and three security tests (one PASS, F03/F04 FAIL as expected for current defects). Live E2E workflows NOT RUN. |
-| Security | FAIL at assessed baseline: isolated probes allowed a fabricated admin cookie and preserved an HTML event handler. These probes used local source/mocks, not live exploitation. No corrective evidence yet. |
-| Dependencies | CI branch fresh audit: 39 package findings (2 critical, 26 high, 9 moderate, 2 low). High/critical gate FAIL. Original worktree package edits remain UNVERIFIED. |
+| Build, lint, TypeScript | 1 October clean npm ci, lint and typecheck PASS. Local build blocked by SELF_SIGNED_CERT_IN_CHAIN when next/font fetches Google Fonts with TLS verification enabled. Hosted build pending. Workflow YAML and inline JavaScript parse PASS. Historical hosted build passed on the September baseline. |
+| Unit/integration/E2E | Clean-install local result on 1 October: 26 PASS, 1 FAIL. Node suite: 7 pass, F03 fails; Vitest: 19 pass including supplier containment, secret-safe error logging, workbook formats and Flowbite themes. F04 is fixed. Live E2E NOT RUN. |
+| Security | F04 sanitizer regression PASS; F03 fabricated admin cookie still FAIL. Current-source Gitleaks PASS; full history FAIL (one original Amrod credential and three synthetic fixture matches in PR #2). No supplier revocation or live session verification claimed. |
+| Dependencies | Clean-install CI branch audit on 1 October: zero vulnerabilities; npm audit --audit-level=high PASS. Earlier 39 findings are historical. Runtime and live integration acceptance remain separate. |
 | Database/payment | NOT VERIFIED: permissions, transactions, webhook validation, idempotency and reconciliation require backend review. |
 | Performance | Bundle metrics only; product detail first-load JS ~280 kB. Browser/load capacity NOT TESTED. |
 | Recovery/deployment | NOT VERIFIED. No restore, rollback or deployment acceptance performed. |
 | Production readiness | BLOCKING. The full gate is in the assessment; no production-ready claim is supported. |
 
-**Review state (PR #1, workflow revision `50362b6`):** hosted lint/typecheck/build PASS; tests FAIL (5 pass, 2 fail); dependency security FAIL; secret scanning FAIL (one supplier credential); AI engineering review SKIPPED because secret scanning failed; final CI Gate FAIL. Hosted run finished, it was not merely queued. Mocked review-control checks passed for clear findings, material findings, malformed output and unavailable service; real model inference remains unverified. Human review NOT APPROVED. Merge status BLOCKED / REVIEW_REQUIRED after server-side rule activation; admin access verified. No deployment or runtime approval is claimed.
+**Historical review state (17 September, PR #1 revision `50362b6`):** hosted lint/typecheck/build PASS; tests FAIL (5 pass, 2 fail); dependency security FAIL; secret scanning FAIL (one supplier credential); AI engineering review SKIPPED because secret scanning failed; final CI Gate FAIL. Hosted run finished, it was not merely queued. Mocked review-control checks passed for clear findings, material findings, malformed output and unavailable service; real model inference remains unverified. Human review NOT APPROVED. Merge status BLOCKED / REVIEW_REQUIRED after server-side rule activation; admin access verified. No deployment or runtime approval is claimed.
 
 Historical checks used an already modified lockfile/installed dependencies. Build tooling selected an ancestor lockfile and automatically rewrote a Flowbite CSS directive, later restored. The environment emitted a warning that Node TLS verification was disabled; that setting was not introduced by the assessment. Reproduce checks in a clean, correctly configured environment before release.
 
@@ -173,6 +173,8 @@ Historical checks used an already modified lockfile/installed dependencies. Buil
 
 ## 17. Recent material changes
 
+**2026-10-01 — PR #1 repair:** integrated PR #2 commits, reconciled Node/Vitest tests, sanitized descriptions, removed sensitive token and upstream-error logging, and repaired dependencies. See [remediation decisions](docs/pr1-remediation.md). Current-source Gitleaks passes. Historical scanning still reports the original credential plus three synthetic fixture matches from PR #2; no history was rewritten and no real credential suppressed.
+
 **2026-09-17:** repository access verified; comprehensive assessment and local baseline checks completed; security/commerce findings recorded. Subsequent local manifest/lockfile changes observed with unknown ownership and no fresh validation. Added this state snapshot and linked assessment for GitHub collaboration; no application remediation is included in this documentation change.
 
 **2026-09-17 — CI-001:** published PR #1 from isolated `codex/github-actions-gates`; hosted run validated lint/types/build and exposed known security failures. Required CI Gate name is reserved for PR/merge-group runs; ordinary pushes use Branch validation to avoid satisfying a PR requirement without AI review. Added one precise scanner false-positive exclusion for the reset-step enum; real supplier credentials remain detected. Original worktree package edits preserved. Initial activation was denied for the then write-only account. Subsequently admin access was verified, ruleset 23605355 activated, and effective main rules read back. PR #1 reports BLOCKED / REVIEW_REQUIRED; BLOCK-005 is resolved.
@@ -184,12 +186,12 @@ Historical checks used an already modified lockfile/installed dependencies. Buil
 | BLOCK-001 | Security/release approval | Restrict exposed proxies and rotate/revoke committed supplier credentials through the account owner; validate replacement configuration. Repository code fixes alone do not revoke historical credentials. |
 | BLOCK-002 | API-001; integrated auth/payment approval | Provide backend repository/specification and staging test setup; demonstrate ownership, price/stock enforcement and payment notification/idempotency behavior. |
 | BLOCK-003 | OPS-001; production approval | Identify infrastructure owner and produce hosting, HTTPS, monitoring, backup/restore and rollback evidence. |
-| BLOCK-004 | Reusing historical validation for package edits | Establish package-change ownership, reconcile intended versions and run clean validation. This does not prevent independent documentation or isolated source fixes. |
+| BLOCK-004 | Dependency reconciliation acceptance | PR #2 dependency edits reconciled in CI branch; clean install, audit, lint and types pass. Local build is certificate-blocked; verify hosted build. No release acceptance inferred from development checks. |
 | BLOCK-005 — RESOLVED | CI-001 mandatory merge enforcement | Ruleset 23605355 active; effective main rules require CI Gate and independent approval. Existing failing PR #1 reports BLOCKED / REVIEW_REQUIRED. No merge attempted. |
 | BLOCK-006 | AI review/runtime review completion | GitHub Models access/quota and complete diff required. Secret scan must pass before source reaches model review; no skipped/unavailable review is treated as approval. |
 
 ## 19. Next action
 
-**Current next action: claim SEC-001 to remediate supplier credential/proxy exposure.** Main merge controls are VALIDATED. Keep PR #1 unmerged while required checks fail; retain security expectations until real fixes pass. Credential rotation requires the supplier account owner; historical secret remediation requires a reviewed decision.
+**Current next action: obtain the backend JWT verification contract and supplier revocation confirmation.** PR #2 is integrated into PR #1; preserve the F03 failure and historical secret gate until their causes are resolved. Do not merge either PR or rewrite shared history to bypass required evidence.
 
-**Transition condition:** address SEC-002 authentication/HTML failures and DEP-001 dependencies, then obtain successful real model review and independent human approval before merge. Application and production approval remain blocked.
+**Transition condition:** implement backend-backed JWT verification, resolve the historical secret gate through a reviewed cleanup decision after supplier revocation, then obtain successful real model review and independent human approval. Application and production approval remain blocked.

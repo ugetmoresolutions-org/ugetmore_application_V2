@@ -14,9 +14,9 @@ The final **CI Gate** job requires every deterministic job to succeed and, on PR
 
 ## Test coverage and current red baseline
 
-`npm test` uses Node's test runner and the installed TypeScript compiler to execute actual source with explicit dependency doubles. Tests cover branding tier boundaries, multi-color setup/design fees, guest-cart no-op and failure recovery, plus negative authentication/HTML expectations. They require no supplier/backend account or live payment. This is a starter regression suite, not complete E2E coverage.
+`npm test` runs both the Node regression suite and the Vitest supplier suite, preserving failure status from either. The Node suite uses the installed TypeScript compiler to execute actual source with explicit dependency doubles. Tests cover branding tier boundaries, multi-color setup/design fees, guest-cart no-op and failure recovery, plus negative authentication/HTML expectations. They require no supplier/backend account or live payment. This is a starter regression suite, not complete E2E coverage.
 
-The known F03 and F04 security expectations must currently fail. The committed dependency baseline also contains advisories, and committed credentials must be detected. CI being red on this baseline is correct enforcement. Resolving these issues is a separate remediation task; this PR does not silently weaken gates to obtain a green result. The owner's existing uncommitted dependency edits are excluded from this branch.
+The original baseline failed F03 and F04. The October remediation fixes F04; F03 remains blocked on the backend authentication contract. The committed dependency baseline also contains advisories, and committed credentials must be detected. CI being red on this baseline is correct enforcement. PR #1 now incorporates PR #2 and additional fixes described in [remediation decisions](pr1-remediation.md). Gates are not weakened to obtain a green result. The owner's existing uncommitted dependency edits are excluded from this branch.
 
 Run locally:
 
