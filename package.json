@@ -6,7 +6,12 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "node tests/run.cjs",
+    "typecheck": "tsc --noEmit --incremental false",
+    "test:unit": "node --test tests/commerce.test.cjs",
+    "test:security": "node --test tests/security.test.cjs",
+    "test:suppliers": "vitest run"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -30,39 +35,50 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "embla-carousel-react": "^8.6.0",
-    "exceljs": "^4.4.0",
     "flowbite": "^3.1.2",
-    "flowbite-react": "^0.12.7",
+    "flowbite-react": "^0.12.17",
     "framer-motion": "^12.23.12",
     "ioredis": "^5.7.0",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.536.0",
-    "next": "15.4.10",
+    "next": "15.5.27",
     "node-cache": "^5.1.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.63.0",
-    "react-multi-carousel": "^2.8.6",
+    "react-multi-carousel": "2.8.5",
     "react-share": "^5.2.2",
     "recharts": "^3.2.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
     "universal-cookie": "^8.0.1",
     "uuid": "^11.1.0",
-    "xlsx": "^0.18.5",
-    "zod": "^4.1.11"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
+    "zod": "^4.1.11",
+    "sanitize-html": "^2.17.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.4.8",
+    "eslint-config-next": "15.5.27",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.4.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite": "^8.3.1",
+    "vitest": "^5.0.3",
+    "@types/sanitize-html": "^2.16.0"
+  },
+  "overrides": {
+    "flowbite-react": {
+      "deepmerge-ts": "8.0.2"
+    },
+    "next": {
+      "postcss": "8.5.28"
+    }
   }
 }

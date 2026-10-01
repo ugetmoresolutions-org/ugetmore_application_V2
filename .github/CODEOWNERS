@@ -1,0 +1,8 @@
+# Current repository admin; update when additional qualified reviewers are assigned.
+* @ugetmoresolutions
+
+# Explicitly retain owner review on changes to the merge controls themselves.
+/.github/ @ugetmoresolutions
+/.gitleaks.toml @ugetmoresolutions
+/tests/ @ugetmoresolutions
+/PROJECT_STATE.md @ugetmoresolutions
