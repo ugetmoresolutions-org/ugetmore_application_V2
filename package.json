@@ -44,7 +44,7 @@
     "next": "15.5.27",
     "node-cache": "^5.1.2",
     "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "react-dom": "19.3.0",
     "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.63.0",
     "react-multi-carousel": "2.8.5",
