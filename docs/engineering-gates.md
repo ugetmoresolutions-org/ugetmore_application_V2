@@ -16,7 +16,7 @@ The final **CI Gate** job requires every deterministic job to succeed and, on PR
 
 `npm test` runs both the Node regression suite and the Vitest supplier suite, preserving failure status from either. The Node suite uses the installed TypeScript compiler to execute actual source with explicit dependency doubles. Tests cover branding tier boundaries, multi-color setup/design fees, guest-cart no-op and failure recovery, plus negative authentication/HTML expectations. They require no supplier/backend account or live payment. This is a starter regression suite, not complete E2E coverage.
 
-The original baseline failed F03 and F04. The October remediation fixes F04; F03 remains blocked on the backend authentication contract. The committed dependency baseline also contains advisories, and committed credentials must be detected. CI being red on this baseline is correct enforcement. PR #1 now incorporates PR #2 and additional fixes described in [remediation decisions](pr1-remediation.md). Gates are not weakened to obtain a green result. The owner's existing uncommitted dependency edits are excluded from this branch.
+The original baseline failed F03 and F04. The October remediation fixes F04; F03 remains blocked on the backend authentication contract. Dependency remediation now passes the audit. Historical committed credentials remain detected. CI being red on this baseline is correct enforcement. PR #1 now incorporates PR #2 and additional fixes described in [remediation decisions](pr1-remediation.md). Gates are not weakened to obtain a green result. The owner's existing uncommitted dependency edits are excluded from this branch.
 
 Run locally:
 
@@ -48,6 +48,8 @@ Update the existing rule instead of creating duplicates. The initial PR remains 
 After workflows reach main, CODEOWNERS and Dependabot operate from the default branch. Bootstrap owner review must be requested/obtained explicitly because CODEOWNERS is not yet on main. No independent approval is claimed by this setup.
 
 ## Finding and release policy
+
+**Latest hosted evidence (1 October):** [PR run 36856476251](https://github.com/ugetmoresolutions-org/ugetmore_application_V2/actions/runs/36856476251) at `cc01c4f` completed. Lint, typecheck, build and dependency security PASS. Current-source secret scan PASS; history scan FAIL. Tests: 26 PASS, 1 FAIL (F03). AI review SKIPPED behind the secret gate; CI Gate FAIL and independent human approval still required. Later documentation-only commits do not change this tested application/workflow code.
 
 Hosted validation on 17 September 2026: [PR run 35207328768](https://github.com/ugetmoresolutions-org/ugetmore_application_V2/actions/runs/35207328768) at `50362b6` passed lint, typecheck and build. Tests reported five passing and two failing security expectations; dependency and secret scans failed; AI review was skipped after secret-scan failure; CI Gate failed. This demonstrates that known failures propagate, not application safety. Mandatory main rules were subsequently activated and verified as described above. Real Models inference is still unverified; mocked control-flow checks covered clean findings, material findings, malformed output and service denial.
 

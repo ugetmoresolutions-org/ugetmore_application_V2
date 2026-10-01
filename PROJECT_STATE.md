@@ -1,6 +1,6 @@
 ---
 project: UGETMORE e-commerce platform
-state_version: 5
+state_version: 6
 last_updated: "2026-10-01"
 updated_by: Codex, at repository owner's request
 current_phase: Mandatory merge rules active; baseline remediation blocked
@@ -8,8 +8,8 @@ system_maturity: mvp
 target_maturity: production
 active_work_unit: CI-001
 repository_branch: codex/github-actions-gates
-repository_revision: f1e27b850a93b69a1af6ed0dade610cf8e01f181
-revision_scope: Parent CI head before PR 2 integration and remediation; containing commit identified by Git history
+repository_revision: cc01c4f1d1d16e4bc49361bfb900da98c7b1027b
+revision_scope: Application and workflow code validated by hosted run 36856476251; subsequent changes are documentation only
 overall_status: IN_PROGRESS
 production_readiness: BLOCKING
 ---
@@ -85,7 +85,7 @@ No payment, database isolation, deployment, restoration or production workflow i
 | SEC-002 | PLANNED | HTML descriptions sanitized and token console logging removed. JWT/session verification and server-set HttpOnly cookie design still require the backend auth contract; F03 test remains red. |
 | COM-001 | READY | Fix failed-checkout modal, response/error contract and retry/cancel behavior. Mock payment generation failure and confirm UI recovery. |
 | COM-002 | PLANNED | Remove fabricated price/stock; unify cart/document totals; persist guest artwork durably; fix search fallback/cancellation. Cover boundary and reload cases. |
-| DEP-001 | IN_PROGRESS | Reconciled PR #2 package edits in CI worktree; clean npm ci PASS and fresh audit reports zero vulnerabilities. Lint/typecheck PASS. Local build blocked fetching Google Fonts by SELF_SIGNED_CERT_IN_CHAIN with TLS verification enabled; hosted build pending. Original checkout untouched. |
+| DEP-001 | VALIDATED | Reconciled PR #2 package edits in CI worktree; clean npm ci PASS and fresh audit reports zero vulnerabilities. Hosted lint/typecheck/build PASS in run 36856476251. Local build has a machine-specific Google Fonts certificate-chain limitation. This is development validation, not release approval. Original checkout untouched. |
 | API-001 | BLOCKED | Inspect backend identity, ownership, stock/pricing, order transactions and payment notification/idempotency controls. Needs backend source/specification and safe test environment. |
 | QA-001 | PLANNED | Add regression tests and CI for security, commerce and integration failure paths; validate mobile and accessibility flows. |
 | CI-001 | BLOCKED | Workflow execution verified; main rules active; existing defect remediation, real model review and independent approval remain outstanding. |
@@ -150,7 +150,7 @@ F-identifiers map to the dated assessment. F04 HTML sanitization and F08 depende
 
 | Area | Evidence / current limit |
 | --- | --- |
-| Build, lint, TypeScript | 1 October clean npm ci, lint and typecheck PASS. Local build blocked by SELF_SIGNED_CERT_IN_CHAIN when next/font fetches Google Fonts with TLS verification enabled. Hosted build pending. Workflow YAML and inline JavaScript parse PASS. Historical hosted build passed on the September baseline. |
+| Build, lint, TypeScript | 1 October clean npm ci, lint and typecheck PASS. Local build blocked by SELF_SIGNED_CERT_IN_CHAIN when next/font fetches Google Fonts with TLS verification enabled. Hosted build, lint and typecheck PASS in run 36856476251 at cc01c4f. Workflow YAML and inline JavaScript parse PASS. |
 | Unit/integration/E2E | Clean-install local result on 1 October: 26 PASS, 1 FAIL. Node suite: 7 pass, F03 fails; Vitest: 19 pass including supplier containment, secret-safe error logging, workbook formats and Flowbite themes. F04 is fixed. Live E2E NOT RUN. |
 | Security | F04 sanitizer regression PASS; F03 fabricated admin cookie still FAIL. Current-source Gitleaks PASS; full history FAIL (one original Amrod credential and three synthetic fixture matches in PR #2). No supplier revocation or live session verification claimed. |
 | Dependencies | Clean-install CI branch audit on 1 October: zero vulnerabilities; npm audit --audit-level=high PASS. Earlier 39 findings are historical. Runtime and live integration acceptance remain separate. |
@@ -158,6 +158,8 @@ F-identifiers map to the dated assessment. F04 HTML sanitization and F08 depende
 | Performance | Bundle metrics only; product detail first-load JS ~280 kB. Browser/load capacity NOT TESTED. |
 | Recovery/deployment | NOT VERIFIED. No restore, rollback or deployment acceptance performed. |
 | Production readiness | BLOCKING. The full gate is in the assessment; no production-ready claim is supported. |
+
+**Latest hosted evidence (1 October):** [PR run 36856476251](https://github.com/ugetmoresolutions-org/ugetmore_application_V2/actions/runs/36856476251) at `cc01c4f` completed. Lint, typecheck, build and dependency security PASS. Current-source secret scan PASS; history scan FAIL. Tests: 26 PASS, 1 FAIL (F03). AI review SKIPPED behind the secret gate; CI Gate FAIL and independent human approval still required. Later documentation-only commits do not change this tested application/workflow code.
 
 **Historical review state (17 September, PR #1 revision `50362b6`):** hosted lint/typecheck/build PASS; tests FAIL (5 pass, 2 fail); dependency security FAIL; secret scanning FAIL (one supplier credential); AI engineering review SKIPPED because secret scanning failed; final CI Gate FAIL. Hosted run finished, it was not merely queued. Mocked review-control checks passed for clear findings, material findings, malformed output and unavailable service; real model inference remains unverified. Human review NOT APPROVED. Merge status BLOCKED / REVIEW_REQUIRED after server-side rule activation; admin access verified. No deployment or runtime approval is claimed.
 
@@ -186,7 +188,7 @@ Historical checks used an already modified lockfile/installed dependencies. Buil
 | BLOCK-001 | Security/release approval | Restrict exposed proxies and rotate/revoke committed supplier credentials through the account owner; validate replacement configuration. Repository code fixes alone do not revoke historical credentials. |
 | BLOCK-002 | API-001; integrated auth/payment approval | Provide backend repository/specification and staging test setup; demonstrate ownership, price/stock enforcement and payment notification/idempotency behavior. |
 | BLOCK-003 | OPS-001; production approval | Identify infrastructure owner and produce hosting, HTTPS, monitoring, backup/restore and rollback evidence. |
-| BLOCK-004 | Dependency reconciliation acceptance | PR #2 dependency edits reconciled in CI branch; clean install, audit, lint and types pass. Local build is certificate-blocked; verify hosted build. No release acceptance inferred from development checks. |
+| BLOCK-004 — RESOLVED | Dependency reconciliation acceptance | Reconciled PR #2 dependency edits; clean install and zero-vulnerability audit verified; hosted lint, types and production build pass. Development checks do not imply release acceptance. |
 | BLOCK-005 — RESOLVED | CI-001 mandatory merge enforcement | Ruleset 23605355 active; effective main rules require CI Gate and independent approval. Existing failing PR #1 reports BLOCKED / REVIEW_REQUIRED. No merge attempted. |
 | BLOCK-006 | AI review/runtime review completion | GitHub Models access/quota and complete diff required. Secret scan must pass before source reaches model review; no skipped/unavailable review is treated as approval. |
 
